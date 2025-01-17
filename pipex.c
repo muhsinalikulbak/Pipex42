@@ -3,26 +3,34 @@
 #include <string.h> 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdlib.h>
+
 
 int main()
 { 
-    int fd1 = open("file.txt",O_CREAT | O_RDWR | O_APPEND,0777);
-    int fd2 = dup2(fd1,15); // dup en küçük fd'ye kopyalarken dup2 istenilen fd'ye kopyalar 
-    // istenilen fd dolu ise onu close yapıp fd'yi kopyalar
-    char* path = "file.txt"; 
-    // access bir dosyanın izinlerini kontrol eder 
-    if (access(path,R_OK | X_OK) == 0) 
-        printf("Okuma ve çaliştirma izni var \n"); 
-    else 
-        printf("%s\n",strerror(errno)); 
-    // Ya da perror ile istenilen hata çıktısı 
-    close(fd2); close(fd1); 
+    int pipefd[2];
+    pipe(pipefd);
+    int pid = fork();
+    if (pid == 0)
+    {
+        close(pipefd[1]);
+        dup2(pipefd[0],STDIN_FILENO);
 
+        char *args[] = {"/bin/grep","pipex",NULL};
+        char *env[] = {NULL};
+        execve("/bin/grep", args,env);
+        close(pipefd[0]);
+    }
+    if (pid > 0)
+    {
+        dup2(pipefd[1],STDOUT_FILENO);
+        close(pipefd[0]);
+        char *args[] = {"/bin/ls" ,NULL};
+        char *env[] = {NULL};
 
-    printf ("execve'den önce");     
-    char *args[] = {"/bin/cmatrix", NULL};
-    char *env[] = {"TERM=xterm",NULL};
-
-    if (execve("/bin/cmatrix",args,env) == -1)
-        perror("execve hatasi");
+        if (execve("/bin/ls",args,env) == -1)
+            perror("execve hatasi");
+        close(pipefd[1]);
+    }
 }
+
