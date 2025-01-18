@@ -35,5 +35,4 @@ int main()
         char    *env[] = {NULL};
         execve("/bin/grep",argv,env);
     }
-    return 0;  
 }
