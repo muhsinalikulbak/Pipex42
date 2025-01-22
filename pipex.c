@@ -1,38 +1,58 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/22 02:29:11 by mkulbak           #+#    #+#             */
+/*   Updated: 2025/01/22 08:32:18 by mkulbak          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
-int main()
-{ 
-    int pipefd[2];
-    int pid;
-    int fd;
-    int outfd;
-    pipe(pipefd);
-    fd = open("infile.txt", O_RDONLY,0644);
-    pid = fork();
+static int	child_process(char *argv, char *path, int pipefd[])
+{
 
-    if (pid == 0)
-    {
-        dup2(fd,STDIN_FILENO);
-        dup2(pipefd[1],STDOUT_FILENO);
-        close(pipefd[1]);
-        close(pipefd[0]);
-        close(fd);
-        char    *argv[] = {"bin/ls",NULL};
-        char    *env[] = {NULL};
-        execve("/bin/ls",argv,env);
-    }
-    else
-    {
-        wait(NULL);
-        outfd = open("outfile", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        dup2(outfd,STDOUT_FILENO);
-        dup2(pipefd[0],STDIN_FILENO);
-        close(outfd);
-        close(pipefd[0]);
-        close(pipefd[1]);
+}
 
-        char    *argv[] = {"bin/grep","M",NULL};
-        char    *env[] = {NULL};
-        execve("/bin/grep",argv,env);
-    }
+static int	parent_process(char *argv, char *path, int pipefd[])
+{
+
+}
+
+static int	exec(char *argv[], char **paths, int pipefd[])
+{
+	int	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		child_process(argv[2], paths[0], pipefd);
+	}
+	parent_process(argv[3], paths[1], pipefd);
+}
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	int		pipefd[2];
+	char	**paths;
+	int		status;
+
+	if (argc != 5)
+	{
+		errno = 22;
+		error("Incorrect use");
+	}
+	if (access(argv[1], F_OK | R_OK) == -1)
+		error(argv[1], 0);
+	if (pipe(pipefd) == -1)
+		error("Pipe error", 0);
+	paths = (char **)malloc(sizeof(char *) * 3);
+	paths[2] = NULL;
+	paths[0] = path_control(argv[2], envp, paths);
+	paths[1] = path_control(argv[3], envp, paths);
+	status = exec(argv, paths, pipefd);
+	return (status);
 }
