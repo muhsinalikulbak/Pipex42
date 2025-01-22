@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:01:49 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/22 08:26:49 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/22 14:15:04 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,30 +83,4 @@ char	*ft_strdup(const char	*s1)
 	}
 	heap_str[i] = '\0';
 	return (heap_str);
-}
-
-static char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	size_t			i;
-	char			*sub;
-	unsigned int	s_len;
-
-	if (!s)
-		return (NULL);
-	i = 0;
-	s_len = ft_strlen(s);
-	if (start > s_len)
-		return (ft_strdup("\0"));
-	if (start + len > s_len)
-		len = s_len - start;
-	sub = (char *)malloc(sizeof(char) * (len + 1));
-	if (!sub)
-		return (NULL);
-	while (s[i + start] && i < len)
-	{
-		sub[i] = s[i + start];
-		i++;
-	}
-	sub[i] = '\0';
-	return (sub);
 }

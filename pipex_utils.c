@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/22 08:34:26 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/22 15:10:23 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,32 +38,25 @@ static char	*path_helper(char *ful_path, char *cmd, char **paths)
 	exit (127);
 }
 
-char	*path_control(char *argv, char *envp[])
+char	*path_control(char *argv, char *envp[], char **paths)
 {
 	char	*cmd;
-	char	**argv;
+	char	**args;
 	int		i;
 
 	i = 0;
-	argv = ft_split(argv, ' ');
-	if (argv == NULL)
-		error("malloc", 0);
-	cmd = ft_strdup(argv[0]);
-	free_all(argv);
-	while (ft_strncmp(envp[i], "PATH=", 5) == NULL)
+	args = ft_split(argv, ' ');
+	if (args == NULL)
+		error("malloc");
+	cmd = ft_strdup(args[0]);
+	free_all(args);
+	while (ft_strncmp(envp[i], "PATH", 4) != 0)
 		i++;
-	return (path_helper(envp[i], cmd));
+	return (path_helper(envp[i], cmd, paths));
 }
 
-void	error(char *message, int pipefd[])
+void	error(char *message)
 {
-	if (pipefd != NULL)
-	{
-		if (pipefd[0] > 0)
-			close(pipefd[0]);
-		if (pipefd[1] > 0)
-			close(pipefd[1]);
-	}
 	perror(message);
 	exit(EXIT_FAILURE);
 }
