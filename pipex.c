@@ -63,15 +63,19 @@ static void	parent_process(char *argv, char *outfile, char *path, int pipefd[])
 static int	execute(char *argv[], char **paths, int pipefd[])
 {
 	int	pid;
+    int status;
 
 	pid = fork();
 	if (pid == 0)
 		child_process(argv[2], argv[1], paths[0], pipefd);
 	else if (pid > 0)
+    {
+        waitpid(pid, &status, -1);
 		parent_process(argv[3], argv[4], paths[1], pipefd);
+    }
 	else
 		error("Fork failed");
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -83,7 +87,7 @@ int	main(int argc, char *argv[], char *envp[])
 	if (argc != 5)
 	{
 		errno = EINVAL;
-		error("Incorrect use");
+		error("Usage: ./pipex file1 cmd1 cmd2 file2\nError");
 	}
 	if (access(argv[1], F_OK | R_OK) == -1)
 		error(argv[1]);
