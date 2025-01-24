@@ -50,6 +50,8 @@ char	*path_control(char *argv, char *envp[], char **paths)
 		error("malloc");
 	cmd = ft_strdup(args[0]);
 	free_all(args);
+	if (access(cmd, F_OK) == 0)
+		return (cmd);
 	while (ft_strncmp(envp[i], "PATH", 4) != 0)
 		i++;
 	return (path_helper(envp[i], cmd, paths));

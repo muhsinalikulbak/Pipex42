@@ -66,15 +66,12 @@ static int	execute(char *argv[], char **paths, int pipefd[])
     int status;
 
 	pid = fork();
-	if (pid == 0)
-		child_process(argv[2], argv[1], paths[0], pipefd);
-	else if (pid > 0)
-    {
-        waitpid(pid, &status, -1);
-		parent_process(argv[3], argv[4], paths[1], pipefd);
-    }
-	else
+	if (pid == -1)
 		error("Fork failed");
+	else if (pid == 0)
+		child_process(argv[2], argv[1], paths[0], pipefd);
+	waitpid(pid, &status, -1);
+	parent_process(argv[3], argv[4], paths[1], pipefd);
 	return (WEXITSTATUS(status));
 }
 
@@ -84,7 +81,7 @@ int	main(int argc, char *argv[], char *envp[])
 	char	**paths;
 	int		status;
 
-	if (argc != 5)
+	if (argc != 5 || *argv[2] == '\0' || *argv[3] == '\0')
 	{
 		errno = EINVAL;
 		error("Usage: ./pipex file1 cmd1 cmd2 file2\nError");
