@@ -12,49 +12,33 @@
 
 #include "pipex.h"
 
-static char	*path_helper(char *ful_path, char *cmd, char **paths)
+char	*path_control(char *cmd, char *envp[])
 {
-	char	**searched_path;
-	char	*slash_cmd;
+	char	**search_path;
+	char	*slash_command;
 	char	*path;
 	int		i;
+	int		j;
 
+	j = 0;
 	i = 0;
-	searched_path = ft_split(ful_path, ':');
-	while (searched_path[i])
-	{
-		slash_cmd = ft_strjoin("/", cmd);
-		path = ft_strjoin(searched_path[i], slash_cmd);
-		free(slash_cmd);
-		if (access(path, F_OK) == 0)
-			return (free(searched_path), path);
-		free(path);
-		i++;
-	}
-	free_all (paths);
-	free_all (searched_path);
-	write (2, cmd, ft_strlen(cmd));
-	write (2, " : Command not found\n", 21);
-	exit (127);
-}
-
-char	*path_control(char *argv, char *envp[], char **paths)
-{
-	char	*cmd;
-	char	**args;
-	int		i;
-
-	i = 0;
-	args = ft_split(argv, ' ');
-	if (args == NULL)
-		error("malloc");
-	cmd = ft_strdup(args[0]);
-	free_all(args);
-	if (access(cmd, F_OK) == 0)
-		return (cmd);
 	while (ft_strncmp(envp[i], "PATH", 4) != 0)
 		i++;
-	return (path_helper(envp[i], cmd, paths));
+	search_path = ft_split(envp[i], ':');
+	slash_command = ft_strjoin("/", cmd);
+	while (search_path[j])
+	{
+		path = ft_strjoin(search_path[j], slash_command);
+		if (access(path, F_OK) == 0)
+			return (free(slash_command), free(search_path), path);
+		free(path);
+		j++;
+	}
+	free(path);
+	free(search_path);
+	free(slash_command);
+	error("Command error");
+	return "";
 }
 
 void	error(char *message)

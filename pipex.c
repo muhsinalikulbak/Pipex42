@@ -12,73 +12,82 @@
 
 #include "pipex.h"
 
-static void	child_process(char *argv, char *infile, char *path, int pipefd[])
+static void	child_process(char *argv[], char *envp[], int pipefd[])
 {
 	char	**args;
+	char	*cmd;
+	char	*path;
 	int		fd;
 
-	args = ft_split(argv, ' ');
-	fd = open(infile, O_RDONLY, 0644);
+	fd = open(argv[1], O_RDONLY, 0444);
 	if (fd == -1)
-	{
-		free_all(args);
-		error("File could not be opened");
-	}
+		error("File opening error");
+	args = ft_split(argv[2], ' ');
+	cmd = ft_strdup(args[0]);
+	if (access(cmd, F_OK) == 0)
+		path = ft_strdup(cmd);
+	else
+		path = path_control(cmd, envp);
 	dup2(fd, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
-	close(fd);
 	close(pipefd[0]);
+	execve(path, args, NULL);
 	close(pipefd[1]);
-	if (execve(path, args, NULL) == -1)
-	{
-		free_all(args);
-		error("Execve Failed");
-	}
+	close(fd);
+	free_all(args);
+	free(path);
+	free(cmd);
+	error("Execve failed");
 }
 
-static void	parent_process(char *argv, char *outfile, char *path, int pipefd[])
+static void	parent_process(char *argv[], char *envp[], int pipefd[])
 {
 	char	**args;
+	char	*cmd;
+	char	*path;
 	int		fd;
 
-	args = ft_split(argv, ' ');
-	fd = open(outfile, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+	fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0222);
 	if (fd == -1)
-	{
-		free_all(args);
-		error("File could not be opened");
-	}
+		error("File opening error");
+	args = ft_split(argv[3], ' ');
+	cmd = ft_strdup(args[0]);
+	if (access(cmd, F_OK) == 0)
+		path = ft_strdup(cmd);
+	else
+		path = path_control(cmd, envp);
 	dup2(fd, STDOUT_FILENO);
 	dup2(pipefd[0], STDIN_FILENO);
-	close(fd);
-	close(pipefd[0]);
 	close(pipefd[1]);
-	if (execve(path, args, NULL) == -1)
-	{
-		free_all(args);
-		error("Execve Failed");
-	}
+	execve(path, args, NULL);
+	close(pipefd[0]);
+	close(fd);
+	free_all(args);
+	free(path);
+	free(cmd);
+	error("Execve failed");
 }
 
-static int	execute(char *argv[], char **paths, int pipefd[])
+static int	execute(char *argv[], char *envp[])
 {
-	int	pid;
-    int status;
+	int		pipefd[2];
+	int		status;
+	pid_t	pid;
 
+	if (pipe(pipefd) == -1)
+		error("Pipe error");
 	pid = fork();
 	if (pid == -1)
-		error("Fork failed");
-	else if (pid == 0)
-		child_process(argv[2], argv[1], paths[0], pipefd);
-	waitpid(pid, &status, -1);
-	parent_process(argv[3], argv[4], paths[1], pipefd);
-	return (WEXITSTATUS(status));
+		error("Fork error");
+	if (pid == 0)
+		child_process(argv, envp, pipefd);
+	waitpid(pid, &status, 0);
+	parent_process(argv, envp, pipefd);
+	return (status);
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	int		pipefd[2];
-	char	**paths;
 	int		status;
 
 	if (argc != 5 || *argv[2] == '\0' || *argv[3] == '\0')
@@ -86,14 +95,6 @@ int	main(int argc, char *argv[], char *envp[])
 		errno = EINVAL;
 		error("Usage: ./pipex file1 cmd1 cmd2 file2\nError");
 	}
-	if (access(argv[1], F_OK | R_OK) == -1)
-		error(argv[1]);
-	if (pipe(pipefd) == -1)
-		error("Pipe error");
-	paths = (char **)malloc(sizeof(char *) * 3);
-	paths[2] = NULL;
-	paths[0] = path_control(argv[2], envp, paths);
-	paths[1] = path_control(argv[3], envp, paths);
-	status = execute(argv, paths, pipefd);
+	status = execute(argv, envp);
 	return (status);
 }
