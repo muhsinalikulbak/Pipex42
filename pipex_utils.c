@@ -45,8 +45,6 @@ void	argc_check(int argc, char *argv[])
 
 	if (argc != 5)
 		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL);
-	if (*argv[2] == '\0' || *argv[3] == '\0')
-		error("Command not found", ENOENT);
 	i = -1;
 	count = 0;
 	while(argv[2][++i])
