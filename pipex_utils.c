@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/31 18:00:29 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/31 19:55:14 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,36 @@ char	*path_control(char *cmd, char *envp[])
 	{
 		path = ft_strjoin(search_path[i], slash_command);
 		if (access(path, F_OK | X_OK) == 0)
-			return (free(slash_command), free(search_path), path);
+			return (free(slash_command), free_all(search_path), path);
 		free(path);
 	}
-	return (free(slash_command), free_all(search_path), NULL);
+	free_all(search_path);
+	return (free(slash_command), NULL);
 }
 
-void argc_check(int argc, char *argv[])
+void	argc_check(int argc, char *argv[])
 {
-	int	i;
+	int		i;
+	size_t	count;
 
 	if (argc != 5)
 		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL);
-	
+	if (*argv[2] == '\0' || *argv[3] == '\0')
+		error("Command not found", ENOENT);
+	i = -1;
+	count = 0;
+	while(argv[2][++i])
+		if (argv[2][i] == ' ')
+			count++;
+	if (count == ft_strlen(argv[2]))
+		error("Command not found", ENOENT);
+	i = -1;
+	count = 0;
+	while(argv[3][++i])
+		if (argv[3][i] == ' ')
+			count++;
+	if (count == ft_strlen(argv[3]))
+		error("Command not found", ENOENT);
 }
 
 void	error(char *message, int exit_code)
