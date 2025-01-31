@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/22 15:10:23 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/31 17:06:45 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@ char	*path_control(char *cmd, char *envp[])
 	return "";
 }
 
-void	error(char *message)
+void	error(char *message, int exit_code)
 {
+	errno = exit_code;
 	perror(message);
 	exit(EXIT_FAILURE);
 }

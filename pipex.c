@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 02:29:11 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/22 15:09:22 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/31 17:04:25 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	child_process(char *argv[], char *envp[], int pipefd[])
 	char	*path;
 	int		fd;
 
-	fd = open(argv[1], O_RDONLY, 0444);
+	fd = open(argv[1], O_RDONLY, 0777);
 	if (fd == -1)
 		error("File opening error");
 	args = ft_split(argv[2], ' ');
@@ -47,7 +47,7 @@ static void	parent_process(char *argv[], char *envp[], int pipefd[])
 	char	*path;
 	int		fd;
 
-	fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0222);
+	fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (fd == -1)
 		error("File opening error");
 	args = ft_split(argv[3], ' ');
