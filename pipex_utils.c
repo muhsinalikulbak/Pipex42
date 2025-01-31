@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/31 17:06:45 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/31 18:00:29 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,32 @@ char	*path_control(char *cmd, char *envp[])
 	char	*slash_command;
 	char	*path;
 	int		i;
-	int		j;
 
-	j = 0;
+	if (access(cmd, F_OK | X_OK) == 0)
+		return (ft_strdup(cmd));
 	i = 0;
 	while (ft_strncmp(envp[i], "PATH", 4) != 0)
 		i++;
-	search_path = ft_split(envp[i], ':');
+	search_path = ft_split(envp[i] + 5, ':');
 	slash_command = ft_strjoin("/", cmd);
-	while (search_path[j])
+	i = -1;
+	while (search_path[++i])
 	{
-		path = ft_strjoin(search_path[j], slash_command);
-		if (access(path, F_OK) == 0)
+		path = ft_strjoin(search_path[i], slash_command);
+		if (access(path, F_OK | X_OK) == 0)
 			return (free(slash_command), free(search_path), path);
 		free(path);
-		j++;
 	}
-	free(path);
-	free(search_path);
-	free(slash_command);
-	error("Command error");
-	return "";
+	return (free(slash_command), free_all(search_path), NULL);
+}
+
+void argc_check(int argc, char *argv[])
+{
+	int	i;
+
+	if (argc != 5)
+		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL);
+	
 }
 
 void	error(char *message, int exit_code)
