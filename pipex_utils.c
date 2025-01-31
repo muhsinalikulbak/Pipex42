@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/22 15:10:23 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/31 11:38:31 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,30 @@ char	*path_control(char *cmd, char *envp[])
 	while (search_path[j])
 	{
 		path = ft_strjoin(search_path[j], slash_command);
-		if (access(path, F_OK) == 0)
-			return (free(slash_command), free(search_path), path);
+		if (access(path, F_OK | X_OK) == 0)
+			return (free(slash_command), free_all(search_path), path);
 		free(path);
 		j++;
 	}
+	free_all(search_path);
+	return (free(slash_command), NULL);
+}
+
+void	execute(char *argv, char *envp[])
+{
+	char	**args;
+	char	*path;
+
+	args = ft_split(argv, ' ');
+	if (access(args[0], F_OK | X_OK) == 0)
+		path = ft_strdup(args[0]);
+	else
+		path = path_control(args[0], envp);
+	if (path == NULL)
+		error("Command not found");
+	execve(path, args, NULL);
+	free_all(args);
 	free(path);
-	free(search_path);
-	free(slash_command);
-	error("Command error");
-	return "";
 }
 
 void	error(char *message)

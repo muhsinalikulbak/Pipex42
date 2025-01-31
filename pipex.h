@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:26 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/22 15:08:21 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/01/31 11:07:38 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,5 @@ char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);
 void	error(char *message);
 char	*path_control(char *cmd, char *envp[]);
+void	execute(char *argv, char	*envp[]);
 #endif
