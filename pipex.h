@@ -30,4 +30,7 @@ size_t	ft_strlen(const char *s);
 char	*path_control(char *cmd, char *envp[]);
 void	error(char *message, int exit_code);
 void	argc_check(int agrc, char *argv[]);
+void	argc_check_bonus(int argc, char *argv[]);
+int		get_next_line(char **line);
+int	open_file(char *argv, int i);
 #endif

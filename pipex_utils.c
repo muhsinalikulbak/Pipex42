@@ -55,16 +55,19 @@ static	size_t	char_count(char *str, char ch)
 
 void	argc_check(int argc, char *argv[])
 {
+	int	i;
+	
+	i = 2;
 	if (argc != 5)
 		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL);
-	if (char_count(argv[2], ' ') == ft_strlen(argv[2]))
-		error("Command not found", ENOENT);
-	if (char_count(argv[3], ' ') == ft_strlen(argv[3]))
-		error("Command not found", ENOENT);
-	if (char_count(argv[2], '.') > 0)
-		error("Command not found", ENOENT);
-	if (char_count(argv[3], '.') > 0)
-		error("Command not found", ENOENT);
+	while (i < argc -1)
+	{
+		if (char_count(argv[i], ' ') == ft_strlen(argv[i]))
+			error("Command not found", ENOENT);
+		if (char_count(argv[i], '.') > 0)
+			error("Command not found", ENOENT);
+		i++;
+	}
 }
 
 void	error(char *message, int exit_code)

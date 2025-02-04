@@ -35,13 +35,13 @@ $(NAME):		$(OBJS)
 				$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 clean:
-				$(RM) $(OBJS) 
+				$(RM) $(OBJS) $(OBJS_B)
 
 fclean:			clean
-				$(RM) $(NAME)
+				$(RM) $(NAME) $(NAME_B)
 
 re_bonus:		fclean bonus
 
 re:				fclean all
 
-.PHONY:			all clean fclean re bonus re_bonus bonus
+.PHONY:			all clean fclean re bonus re_bonus bonus	
