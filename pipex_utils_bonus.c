@@ -1,15 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/04 17:32:09 by mkulbak           #+#    #+#             */
+/*   Updated: 2025/02/04 19:56:16 by mkulbak          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "pipex.h"
+
 int	open_file(char *argv, int i)
 {
 	int	file;
 
 	file = 0;
 	if (i == 0)
-		file = open(argv, O_WRONLY | O_CREAT | O_APPEND, 0777);
-	else if (i == 1)
 		file = open(argv, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	else if (i == 2)
+	else if (i == 1)
 		file = open(argv, O_RDONLY, 0777);
 	if (file == -1)
 		error("File opening error", errno);
@@ -41,9 +51,10 @@ char	*path_control(char *cmd, char *envp[])
 	free_all(search_path);
 	return (free(slash_command), NULL);
 }
+
 static	size_t	char_count(char *str, char ch)
 {
-	int	i;
+	int		i;
 	size_t	count;
 
 	i = 0;
@@ -63,12 +74,12 @@ void	argc_check_bonus(int argc, char *argv[])
 
 	i = 0;
 	if (argc < 5)
-		error("Usage : ./pipex_bonus infile cmd1 cmd2.. outfile\n-OR-\nUsage : ./pipex_bonus here_doc eof cmd1 cmd2.. outfile\n",
-		EINVAL);
+		error("Usage: ./pipex infile cmd1 cmd2.. outfile\n", EINVAL);
 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 	{
 		if (argc < 6)
-			error ("Usage : ./pipex_bonus here_doc eof cmd1 cmd2.. outfile", EINVAL);
+			error ("Usage : ./pipex_bonus here_doc eof cmd1 cmd2.. outfile",
+				EINVAL);
 		i = 3;
 	}
 	else
@@ -88,30 +99,4 @@ void	error(char *message, int exit_code)
 	errno = exit_code;
 	perror(message);
 	exit(EXIT_FAILURE);
-}
-int	get_next_line(char **line)
-{
-	char	*buffer;
-	int		i;
-	int		r;
-	char	c;
-
-	i = 0;
-	r = 0;
-	buffer = (char *)malloc(10000);
-	if (!buffer)
-		return (-1);
-	r = read(0, &c, 1);
-	while (r && c != '\n' && c != '\0')
-	{
-		if (c != '\n' && c != '\0')
-			buffer[i] = c;
-		i++;
-		r = read(0, &c, 1);
-	}
-	buffer[i] = '\n';
-	buffer[++i] = '\0';
-	*line = buffer;
-	free(buffer);
-	return (r);
 }

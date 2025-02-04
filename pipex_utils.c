@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/31 19:55:14 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/04 17:38:52 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ char	*path_control(char *cmd, char *envp[])
 	free_all(search_path);
 	return (free(slash_command), NULL);
 }
+
 static	size_t	char_count(char *str, char ch)
 {
-	int	i;
+	int		i;
 	size_t	count;
 
 	i = 0;
@@ -56,7 +57,7 @@ static	size_t	char_count(char *str, char ch)
 void	argc_check(int argc, char *argv[])
 {
 	int	i;
-	
+
 	i = 2;
 	if (argc != 5)
 		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL);

@@ -6,14 +6,14 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:26 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/31 19:28:11 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/04 19:59:46 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include <stdio.h> 
+# include <stdio.h>
 # include <unistd.h>
 # include <string.h> 
 # include <errno.h>
@@ -31,6 +31,5 @@ char	*path_control(char *cmd, char *envp[]);
 void	error(char *message, int exit_code);
 void	argc_check(int agrc, char *argv[]);
 void	argc_check_bonus(int argc, char *argv[]);
-int		get_next_line(char **line);
-int	open_file(char *argv, int i);
+int		open_file(char *argv, int i);
 #endif

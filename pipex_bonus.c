@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/04 17:32:05 by mkulbak           #+#    #+#             */
+/*   Updated: 2025/02/04 19:58:58 by mkulbak          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "pipex.h"
 
@@ -8,17 +19,17 @@ void	execute(char *argv, char **envp)
 
 	args = ft_split(argv, ' ');
 	path = path_control(args[0], envp);
-	if (!path)	
+	if (!path)
 	{
 		free_all(args);
 		error("Malloc error", EXIT_FAILURE);
 	}
 	if (execve(path, args, envp) == -1)
-    {
-        free_all(args);
-        free(path);
+	{
+		free_all(args);
+		free(path);
 		error("Execve Fail", errno);
-    }
+	}
 }
 
 void	child_process(char *argv, char **envp)
@@ -43,6 +54,33 @@ void	child_process(char *argv, char **envp)
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 	}
+}
+
+int	get_next_line(char **line)
+{
+	char	*buffer;
+	int		i;
+	int		r;
+	char	c;
+
+	i = 0;
+	r = 0;
+	buffer = (char *)malloc(10000);
+	if (!buffer)
+		return (-1);
+	r = read(0, &c, 1);
+	while (r && c != '\n' && c != '\0')
+	{
+		if (c != '\n' && c != '\0')
+			buffer[i] = c;
+		i++;
+		r = read(0, &c, 1);
+	}
+	buffer[i] = '\n';
+	buffer[++i] = '\0';
+	*line = buffer;
+	free(buffer);
+	return (r);
 }
 
 void	here_doc(char *limiter)
@@ -78,22 +116,22 @@ int	main(int argc, char **argv, char **envp)
 	int	input;
 	int	output;
 
-    argc_check_bonus(argc, argv);
-    if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-    {
-        i = 3;
-        output = open_file(argv[argc - 1], 0);
-        here_doc(argv[2]);
-    }
-    else
-    {
-        i = 2;
-        output = open_file(argv[argc - 1], 1);
-        input = open_file(argv[1], 2);
-        dup2(input, STDIN_FILENO);
-    }
-    while (i < argc - 2)
-        child_process(argv[i++], envp);
-    dup2(output, STDOUT_FILENO);
-    execute(argv[argc - 2], envp);
+	argc_check_bonus(argc, argv);
+	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+	{
+		i = 3;
+		output = open_file(argv[argc - 1], 0);
+		here_doc(argv[2]);
+	}
+	else
+	{
+		i = 2;
+		output = open_file(argv[argc - 1], 0);
+		input = open_file(argv[1], 1);
+		dup2(input, STDIN_FILENO);
+	}
+	while (i < argc - 2)
+		child_process(argv[i++], envp);
+	dup2(output, STDOUT_FILENO);
+	execute(argv[argc - 2], envp);
 }
