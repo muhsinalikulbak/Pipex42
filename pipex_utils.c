@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/04 17:38:52 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/04 23:48:12 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	argc_check(int argc, char *argv[])
 		if (char_count(argv[i], ' ') == ft_strlen(argv[i]))
 			error("Command not found", ENOENT);
 		if (char_count(argv[i], '.') > 0)
+			error("Command not found", ENOENT);
+		if (char_count(argv[i], '/') > 0)
 			error("Command not found", ENOENT);
 		i++;
 	}
