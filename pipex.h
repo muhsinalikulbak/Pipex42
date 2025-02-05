@@ -22,14 +22,15 @@
 # include <sys/wait.h>
 
 char	**ft_split(char const *s, char c);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	**free_all(char **result);
 char	*ft_strdup(const char	*s1);
 char	*ft_strjoin(char const *s1, char const *s2);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t	ft_strlen(const char *s);
 char	*path_control(char *cmd, char *envp[]);
 void	error(char *message, int error_code, int exit_code);
-void	argc_check(int agrc, char *argv[]);
 void	argc_check_bonus(int argc, char *argv[]);
 int		open_file(char *argv, int i);
+void	wait_child(pid_t pid);
+size_t	char_count(char *str, char ch);
 #endif

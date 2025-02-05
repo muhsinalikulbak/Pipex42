@@ -22,13 +22,13 @@ void	execute(char *argv, char **envp)
 	if (!path)
 	{
 		free_all(args);
-		error("Command not found", EXIT_FAILURE);
+		error("Command not found", ENOENT, 127);
 	}
 	if (execve(path, args, envp) == -1)
 	{
 		free_all(args);
 		free(path);
-		error("Execve Fail", errno);
+		error("Execve Fail", errno, EXIT_FAILURE);
 	}
 }
 
@@ -38,10 +38,10 @@ void	child_process(char *argv, char **envp)
 	int		fd[2];
 
 	if (pipe(fd) == -1)
-		error("Pipe error", errno);
+		error("Pipe error", errno, EXIT_FAILURE);
 	pid = fork();
 	if (pid == -1)
-		error("Fork error", errno);
+		error("Fork error", errno, EXIT_FAILURE);
 	if (pid == 0)
 	{
 		close(fd[0]);
@@ -50,7 +50,7 @@ void	child_process(char *argv, char **envp)
 	}
 	else
 	{
-		waitpid(pid, NULL, 0);
+		wait_child(pid);
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 	}
@@ -90,8 +90,9 @@ void	here_doc(char *limiter)
 	char	*line;
 
 	if (pipe(fd) == -1)
-		error("Pipe error", errno);
-	reader_pid = fork();
+		error("Pipe error", errno, EXIT_FAILURE);
+	if ((reader_pid = fork()) == -1)
+		error("Fork error", errno, EXIT_FAILURE);
 	if (reader_pid == 0)
 	{
 		close(fd[0]);
@@ -104,7 +105,7 @@ void	here_doc(char *limiter)
 	}
 	else
 	{
-		waitpid(reader_pid, NULL, 0);
+		wait_child(reader_pid);
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 	}

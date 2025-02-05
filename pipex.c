@@ -18,9 +18,7 @@ static void	child_process(char *argv[], char *envp[], int pipefd[])
 	char	*path;
 	int		fd;
 
-	fd = open(argv[1], O_RDONLY, 0777);
-	if (fd == -1)
-		error("File opening error", errno, EXIT_FAILURE);
+	fd = open_file(argv[1], 2);
 	dup2(fd, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[0]);
@@ -45,9 +43,7 @@ static void	parent_process(char *argv[], char *envp[], int pipefd[])
 	char	*path;
 	int		fd;
 
-	fd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	if (fd == -1)
-		error("File opening error", errno, EXIT_FAILURE);
+	fd = open_file(argv[4], 1);
 	dup2(fd, STDOUT_FILENO);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[1]);
@@ -66,18 +62,23 @@ static void	parent_process(char *argv[], char *envp[], int pipefd[])
 	}
 }
 
-void wait_child(pid_t pid)
+void	argc_check(int argc, char *argv[])
 {
-    int status;
-    int exit_code;
+	int	i;
 
-    waitpid(pid, &status, 0);
-    if (WIFEXITED(status))
-    {
-        exit_code = WEXITSTATUS(status);
-        if (exit_code != 0)
-            exit(exit_code);
-    }
+	i = 2;
+	if (argc != 5)
+		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL, ENOENT);
+	while (i < argc -1)
+	{
+		if (char_count(argv[i], ' ') == ft_strlen(argv[i]))
+			error("Command not found", ENOENT, 127);
+		if (char_count(argv[i], '.') > 0)
+			error("Command not found", ENOENT, 127);
+		if (char_count(argv[i], '/') == ft_strlen(argv[i]))
+			error("Command not found", ENOENT, 127);
+		i++;
+	}
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -88,8 +89,7 @@ int	main(int argc, char *argv[], char *envp[])
 	argc_check(argc, argv);
 	if (pipe(pipefd) == -1)
 		error("Pipe error", errno, EXIT_FAILURE);
-	pid = fork();
-	if (pid == -1)
+	if ((pid = fork()) == -1)
 		error("Fork error", errno, EXIT_FAILURE);
 	if (pid == 0)
 		child_process(argv, envp, pipefd);

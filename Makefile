@@ -10,8 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS			=	pipex.c pipex_utils.c split.c libft.c
-SRCS_B			= 	pipex_bonus.c pipex_utils_bonus.c libft.c split.c
+SRCS			=	pipex.c  split.c libft.c common_utils.c
+SRCS_B			= 	pipex_bonus.c pipex_utils_bonus.c libft.c split.c common_utils.c
 
 OBJS			= $(SRCS:.c=.o)
 OBJS_B			= $(SRCS_B:.c=.o)
@@ -21,7 +21,7 @@ NAME_B			= pipex_bonus
 
 CC				= cc
 RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror -g
+CFLAGS			= -Wall -Wextra -Werror
 
 
 all:			$(NAME)
@@ -44,4 +44,4 @@ re_bonus:		fclean bonus
 
 re:				fclean all
 
-.PHONY:			all clean fclean re bonus re_bonus bonus	
+.PHONY:			all clean fclean re bonus re_bonus bonus
