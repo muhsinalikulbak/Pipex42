@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:32:05 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/04 19:58:58 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/05 11:56:37 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,8 @@ int	main(int argc, char **argv, char **envp)
 	else
 	{
 		i = 2;
-		output = open_file(argv[argc - 1], 0);
-		input = open_file(argv[1], 1);
+		output = open_file(argv[argc - 1], 1);
+		input = open_file(argv[1], 2);
 		dup2(input, STDIN_FILENO);
 	}
 	while (i < argc - 2)

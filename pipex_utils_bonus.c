@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:32:09 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/04 23:48:03 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/05 11:56:55 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ int	open_file(char *argv, int i)
 
 	file = 0;
 	if (i == 0)
+		file = open(argv, O_WRONLY | O_CREAT | O_APPEND, 0777);
+	else if(i == 1)
 		file = open(argv, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	else if (i == 1)
+	else if (i == 2)
 		file = open(argv, O_RDONLY, 0777);
 	if (file == -1)
 		error("File opening error", errno);
