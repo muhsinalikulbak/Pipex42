@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/04 23:48:12 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/05 20:45:24 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,22 @@ void	argc_check(int argc, char *argv[])
 
 	i = 2;
 	if (argc != 5)
-		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL);
+		error("Usage : ./pipex infile cmd1 cmd2 outfile", EINVAL, EXIT_FAILURE);
 	while (i < argc -1)
 	{
 		if (char_count(argv[i], ' ') == ft_strlen(argv[i]))
-			error("Command not found", ENOENT);
+			error("Command not found", ENOENT, 127);
 		if (char_count(argv[i], '.') > 0)
-			error("Command not found", ENOENT);
+			error("Command not found", ENOENT, 127);
 		if (char_count(argv[i], '/') > 0)
-			error("Command not found", ENOENT);
+			error("Command not found", ENOENT, 127);
 		i++;
 	}
 }
 
-void	error(char *message, int exit_code)
+void	error(char *message, int error_code, int exit_code)
 {
-	errno = exit_code;
+	errno = error_code;
 	perror(message);
-	exit(EXIT_FAILURE);
+	exit(exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:26 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/04 19:59:46 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/05 20:28:28 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*ft_strdup(const char	*s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);
 char	*path_control(char *cmd, char *envp[]);
-void	error(char *message, int exit_code);
+void	error(char *message, int error_code, int exit_code);
 void	argc_check(int agrc, char *argv[]);
 void	argc_check_bonus(int argc, char *argv[]);
 int		open_file(char *argv, int i);
