@@ -93,6 +93,6 @@ int	main(int argc, char *argv[], char *envp[])
 		error("Fork error", errno, EXIT_FAILURE);
 	if (pid == 0)
 		child_process(argv, envp, pipefd);
-	waitpid(pid, NULL, 0);
+	wait_child(pid);
 	parent_process(argv, envp, pipefd);
 }
