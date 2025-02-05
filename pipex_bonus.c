@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:32:05 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/05 11:56:37 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/05 12:36:06 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	execute(char *argv, char **envp)
 	if (!path)
 	{
 		free_all(args);
-		error("Malloc error", EXIT_FAILURE);
+		error("Command not found", EXIT_FAILURE);
 	}
 	if (execve(path, args, envp) == -1)
 	{
