@@ -31,6 +31,24 @@ void wait_child(pid_t pid)
     }
 }
 
+static char	*cmd_with_path(char *with_path)
+{
+	char	**directions;
+	char	*cmd;
+	char	*temp;
+	int		i;
+
+	i = 0;
+	directions = ft_split(with_path, '/');
+	while (directions[i])
+		i++;
+	temp = ft_strdup(directions[i-1]);
+	cmd = ft_strjoin("/", temp);
+	free(temp);
+	free_all(directions);
+	return (cmd);
+}
+
 char	*path_control(char *cmd, char *envp[])
 {
 	char	**search_path;
@@ -39,12 +57,13 @@ char	*path_control(char *cmd, char *envp[])
 	int		i;
 
 	if (access(cmd, F_OK) == 0)
-		return (ft_strdup(cmd));
+		slash_command = cmd_with_path(cmd);
+	else
+		slash_command = ft_strjoin("/", cmd);
 	i = 0;
-	while (ft_strncmp(envp[i], "PATH", 4) != 0)
+	while (ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
 	search_path = ft_split(envp[i] + 5, ':');
-	slash_command = ft_strjoin("/", cmd);
 	i = -1;
 	while (search_path[++i])
 	{
@@ -53,8 +72,7 @@ char	*path_control(char *cmd, char *envp[])
 			return (free(slash_command), free_all(search_path), path);
 		free(path);
 	}
-	free_all(search_path);
-	return (free(slash_command), NULL);
+	return (free(slash_command), free_all(search_path), NULL);
 }
 
 size_t	char_count(char *str, char ch)
@@ -75,6 +93,8 @@ size_t	char_count(char *str, char ch)
 
 void	error(char *message, int error_code, int exit_code)
 {
+	if (error_code == EACCES)
+		exit_code = 126;
 	errno = error_code;
 	perror(message);
 	exit(exit_code);
