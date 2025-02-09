@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:32:05 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/05 12:36:06 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/09 19:27:37 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void	here_doc(char *limiter)
 
 	if (pipe(fd) == -1)
 		error("Pipe error", errno, EXIT_FAILURE);
-	if ((reader_pid = fork()) == -1)
+	reader_pid = fork();
+	if (reader_pid == -1)
 		error("Fork error", errno, EXIT_FAILURE);
 	if (reader_pid == 0)
 	{

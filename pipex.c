@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 02:29:11 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/05 20:44:59 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/09 19:26:46 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	child_process(char *argv[], char *envp[], int pipefd[])
 	path = path_control(args[0], envp);
 	if (path == NULL)
 	{
-		free_all(args);	
+		free_all(args);
 		error("Command not found", ENOENT, 127);
 	}
 	if (execve(path, args, NULL) == -1)
@@ -89,7 +89,7 @@ int	main(int argc, char *argv[], char *envp[])
 	argc_check(argc, argv);
 	if (pipe(pipefd) == -1)
 		error("Pipe error", errno, EXIT_FAILURE);
-	if ((pid = fork()) == -1)
+	if ((pid == fork()) == -1)
 		error("Fork error", errno, EXIT_FAILURE);
 	if (pid == 0)
 		child_process(argv, envp, pipefd);

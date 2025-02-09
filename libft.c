@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:01:49 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/01/31 19:54:48 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/09 19:25:08 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,20 @@ char	*ft_strdup(const char	*s1)
 	}
 	heap_str[i] = '\0';
 	return (heap_str);
+}
+
+size_t	char_count(char *str, char ch)
+{
+	int		i;
+	size_t	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == ch)
+			count++;
+		i++;
+	}
+	return (count);
 }

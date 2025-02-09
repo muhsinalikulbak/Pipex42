@@ -6,7 +6,7 @@
 #    By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 05:12:18 by mkulbak           #+#    #+#              #
-#    Updated: 2025/02/05 04:41:41 by mkulbak          ###   ########.fr        #
+#    Updated: 2025/02/09 18:22:34 by mkulbak          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ all:			$(NAME)
 bonus:			$(NAME_B)
 
 $(NAME_B):		$(OBJS_B)
-				$(CC) $(CFLAGS) $(OBJS_B) -o $(NAME_B)
+				$(CC) $(CFLAGS) $(OBJS_B) -o $(NAME)
 
 $(NAME):		$(OBJS)
 				$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
