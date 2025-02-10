@@ -33,4 +33,5 @@ void	argc_check_bonus(int argc, char *argv[]);
 int		open_file(char *argv, int i);
 void	wait_child(pid_t pid);
 size_t	char_count(char *str, char ch);
+void	here_doc(char *limiter);
 #endif

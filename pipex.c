@@ -89,7 +89,8 @@ int	main(int argc, char *argv[], char *envp[])
 	argc_check(argc, argv);
 	if (pipe(pipefd) == -1)
 		error("Pipe error", errno, EXIT_FAILURE);
-	if ((pid == fork()) == -1)
+	pid = fork();
+	if (pid == -1)
 		error("Fork error", errno, EXIT_FAILURE);
 	if (pid == 0)
 		child_process(argv, envp, pipefd);
