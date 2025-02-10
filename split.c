@@ -6,7 +6,7 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 02:29:21 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/04 17:32:32 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/10 16:52:32 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	**free_all(char **result)
 	return (NULL);
 }
 
-static char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t			i;
 	char			*sub;

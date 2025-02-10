@@ -6,54 +6,45 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 17:32:09 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/09 19:24:58 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/10 16:57:21 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char *get_next_line()
+char	*ft_strchr(const char *s, int c)
 {
-	char	*buffer;
-	int		i;
-	int		r;
-	char	c;
+	int	i;
+	int	len;
 
+	len = ft_strlen(s);
 	i = 0;
-	r = 0;
-	buffer = (char *)malloc(1000);
-	if (!buffer)
-		error("Malloc error", errno, EXIT_FAILURE);
-	r = read(STDIN_FILENO, &c, 1);
-	while (r && c != '\n' && c != '\0')
+	while (i <= len)
 	{
-		if (c != '\n' && c != '\0')
-			buffer[i] = c;
+		if (s[i] == (char)c)
+			return ((char *)s + i);
 		i++;
-		r = read(STDIN_FILENO, &c, 1);
 	}
-	buffer[i] = '\n';
-	buffer[++i] = '\0';
-	return (buffer);
+	return (NULL);
 }
 
-static void console_read(char *limiter, int pipefd[])
+static void	console_read(char *limiter, int pipefd[])
 {
-    char    *line;
+	char	*line;
 
-    close(pipefd[0]);
-    line = get_next_line();
-    while (line != NULL)
-    {
-        if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-        {
-            free(line);
-            exit(EXIT_SUCCESS);
-        }
-        write(pipefd[1], line, ft_strlen(line));
-        free(line);
-        line = get_next_line();
-    }
+	line = get_next_line(STDIN_FILENO);
+	close(pipefd[0]);
+	while (line != NULL)
+	{
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		{
+			free(line);
+			exit(EXIT_SUCCESS);
+		}
+		write(pipefd[1], line, ft_strlen(line));
+		free(line);
+		line = get_next_line(STDIN_FILENO);
+	}
 }
 
 void	here_doc(char *limiter)
@@ -67,7 +58,7 @@ void	here_doc(char *limiter)
 	if (reader_pid == -1)
 		error("Fork error", errno, EXIT_FAILURE);
 	if (reader_pid == 0)
-        console_read(limiter, fd);
+		console_read(limiter, fd);
 	else
 	{
 		wait_child(reader_pid);

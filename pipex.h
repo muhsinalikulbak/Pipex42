@@ -6,13 +6,15 @@
 /*   By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 05:12:26 by mkulbak           #+#    #+#             */
-/*   Updated: 2025/02/05 20:28:28 by mkulbak          ###   ########.fr       */
+/*   Updated: 2025/02/10 16:55:05 by mkulbak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
-
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h> 
@@ -34,4 +36,7 @@ int		open_file(char *argv, int i);
 void	wait_child(pid_t pid);
 size_t	char_count(char *str, char ch);
 void	here_doc(char *limiter);
+char	*get_next_line(int fd);
+char	*ft_strchr(const char *s, int c);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 #endif

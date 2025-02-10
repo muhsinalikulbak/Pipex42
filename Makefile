@@ -6,12 +6,12 @@
 #    By: mkulbak <mkulbak@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 05:12:18 by mkulbak           #+#    #+#              #
-#    Updated: 2025/02/09 18:22:34 by mkulbak          ###   ########.fr        #
+#    Updated: 2025/02/10 16:52:14 by mkulbak          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			=	pipex.c  split.c libft.c common_utils.c
-SRCS_B			= 	pipex_bonus.c pipex_utils_bonus.c libft.c split.c common_utils.c
+SRCS_B			= 	pipex_bonus.c pipex_utils_bonus.c libft.c split.c common_utils.c get_next_line.c
 
 OBJS			= $(SRCS:.c=.o)
 OBJS_B			= $(SRCS_B:.c=.o)
